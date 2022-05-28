@@ -23,6 +23,13 @@ class MonsterWorkload(Choice):
 	option_grinding_required = 3
 	default = 1
 
+class KillQuestsPerMonster(Range):
+	"""How many quests to kill monsters there are per non-boss type monster.  Multiplies with Monster Workload for longer/shorter runs."""
+	display_name = "Kill Quests Per Monster"
+	range_start = 3
+	range_end = 10
+	default = 5
+
 class ItemLevelType(Choice):
 	"""Whether the item level of loot dropped from receiving your items is determined by current character level, or by current check progression (recommended for async multiworlds)"""
 	display_name = "Item Level Type"
@@ -40,6 +47,7 @@ class BaseItemShopPrice(Range):
 ghostlore_options: typing.Dict[str, type(Option)] = {
 	"goal": Goal,
 	"monster_workload": MonsterWorkload,
+	"kill_quests_per_monster": KillQuestsPerMonster,
 	"item_level_type": ItemLevelType,
 	"base_item_shop_price": BaseItemShopPrice,
 	"death_link": DeathLink
