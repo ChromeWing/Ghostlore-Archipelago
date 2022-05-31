@@ -5,8 +5,8 @@ class GhostloreLocation(Location):
     game: str = "Ghostlore"
 
 
-# 101,303,000 - 101,303,194
-offset = 10_13_03_000
+# 10,133,000 - 10,133,194
+offset = 10_13_3_000
 
 
 shop_size = 20
