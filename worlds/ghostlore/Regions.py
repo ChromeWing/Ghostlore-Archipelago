@@ -19,15 +19,15 @@ ghostlore_regions = [
 
 ghostlore_connections = [
 	('New Adventure', None, 'Starting Zone'),
-	('Rescued Master Ghosthunter', ["Defeat Mogui Summoner"], 'Seaport'),
+	('Rescued Master Ghosthunter', None, 'Seaport'),
 	('Sail to Pulau Hijawan', None,'Pulau Hijawan'),
-	('Kill Rafflesia', ["Defeat Rafflesia"], 'Pulau Kubor'),
-	('Kill Hantu Raya', ["Defeat Hantu Raya"], 'Kenchanaraya Ruins'),
+	('Kill Rafflesia', None, 'Pulau Kubor'),
+	('Kill Hantu Raya', None, 'Kenchanaraya Ruins'),
 	('Collect Chthonite', ["Chthonite"], 'Pulau Pasir Puaka'),
-	('Kill all Jinns', ["Defeat Ice Jinn", "Defeat Thunder Jinn", "Defeat Fire Jinn"], 'Pulau Bakau'),
-	('Kill Hantu Tinggi', ["Defeat Hantu Tinggi"], 'Abandoned Old Hospital'),
+	('Kill all Jinns', None, 'Pulau Bakau'),
+	('Kill Hantu Tinggi', None, 'Abandoned Old Hospital'),
 	('Rescue little girl', None, 'Batu Sinaran'),
-	('Collect Astralite', ["Astralite"], 'Endgame')
+	('Collect Astralite', ["Chthonite", "Astralite"], 'Endgame')
 ]
 
 

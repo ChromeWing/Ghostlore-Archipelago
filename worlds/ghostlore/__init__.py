@@ -6,7 +6,7 @@ from BaseClasses import Item, Tutorial
 from worlds.ghostlore.Regions import ghostlore_regions, ghostlore_connections
 from .Items import item_table, GhostloreItem
 from .Locations import get_locations_for_region, location_table, regular_monster_names, boss_monster_names, shop_size, GhostloreLocation
-from .Options import ghostlore_options
+from .Options import Goal, ghostlore_options
 from .Rules import set_rules
 from ..AutoWorld import World, WebWorld
 
@@ -53,25 +53,61 @@ class GhostloreWorld(World):
 		for boss in boss_monster_names:
 			itempool += [f"{boss} Boss Loot"]
 
+		self.item_name_groups["Loot"] = itempool
+
 		# Shop items
 		for i in range(0,shop_size):
-			itempool += [f"Shop {i+1}"]
+			itempool += [f"Recipe {i+1}"]
+
+		# Quest items
+		for i in ["Chthonite", "Astralite"]:
+			itempool += [i]
 
 		itempool = list(map(lambda name: self.create_item(name), itempool))
+
+		print(itempool)
 		self.world.itempool += itempool
+
+		self.world.get_location("End of story", self.player).place_locked_item(self.create_goal_event("Victory"))
+		self.world.get_location("Hell Gate 1", self.player).place_locked_item(self.create_goal_event("Hell Gate 1 cleared"))
+		self.world.get_location("Hell Gate 3", self.player).place_locked_item(self.create_goal_event("Hell Gate 3 cleared"))
+		self.world.get_location("Hell Gate 10", self.player).place_locked_item(self.create_goal_event("Hell Gate 10 cleared"))
+
+		if self.goal == 0:
+			
+			pass
+		elif self.goal == 1:
+			self.world.completion_condition[self.player] = lambda state: state.has("Hell Gate 1 cleared", self.player)
+		elif self.goal == 2:
+			self.world.completion_condition[self.player] = lambda state: state.has("Hell Gate 3 cleared", self.player)
+		elif self.goal == 3:
+			self.world.completion_condition[self.player] = lambda state: state.has("Hell Gate 10 cleared", self.player)
+
+		self.world.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
+
+
 
 	def set_rules(self):
 		set_rules(self.world, self.player)
 
+	def generate_early(self):
+		self.goal = self.world.goal[self.player].value
+		self.monster_workload = self.world.monster_workload[self.player].value
+		self.kill_quests_per_monster = self.world.kill_quests_per_monster[self.player].value
+		self.item_level_type = self.world.item_level_type[self.player].value
+		self.base_item_shop_price = self.world.base_item_shop_price[self.player].value
+		self.death_link = self.world.death_link[self.player].value
+
 	def create_regions(self):
 		for(reg, exits) in ghostlore_regions:
 			region = Region(reg, RegionType.Generic, f"Something first found from {reg}",self.player,self.world)
-			for i in get_locations_for_region(reg):
+			for i in get_locations_for_region(reg,self.kill_quests_per_monster):
 				region.locations += [GhostloreLocation(self.player, i, location_table[i], region)]
 			for e in exits:
 				region.exits += [Entrance(self.player, e, region)]
-				print(e)
+			self.world.regions.append(region)
 		for(exit, requirements, region) in ghostlore_connections:
+			print(exit+ " "+str(self.player))
 			connection = self.world.get_entrance(exit, self.player)
 			if requirements != None:
 				connection.access_rule = lambda state: state.has_all(requirements, self.player)
@@ -83,10 +119,13 @@ class GhostloreWorld(World):
 		item = GhostloreItem(name, self._is_progression(name), item_id, self.player)
 		return item
 
-	
+	def create_goal_event(self, name: str) -> Item:
+		event = GhostloreItem(name, True, None, self.player)
+		event.type = "Victory"
+		return event
 		
-	def _is_progression(name: str):
-		return False #TODO placeholder
+	def _is_progression(self, name: str):
+		return "Loot" in name or name in ["Chthonite", "Astralite"]
 	
 	def fill_slot_data(self):
 		return {
