@@ -12,49 +12,87 @@ offset = 10_13_3_000
 shop_size = 20
 
 kill_descriptor = [
-    "Kill",
-    "Slay",
-    "Wipe Out",
-    "Destroy",
-    "Slaughter",
-    "Vanquish",
-    "Execute",
-    "Annihilate",
-    "Obliterate",
-    "Exterminate"
+    'Kill',
+    'Slay',
+    'Wipe Out',
+    'Destroy',
+    'Slaughter',
+    'Vanquish',
+    'Execute',
+    'Annihilate',
+    'Obliterate',
+    'Exterminate'
 ]
 
-regular_monster_names = [
-    "Ahool",
-    "Babi Ngepet",
-    "E-Gui",
-    "Gui-Kia",
-    "Hantu Raya",
-    "Hantu Tinggi",
-    "Jenglot",
-    "Jiang-Shi",
-    "Komodo Wizard",
-    "Salamancer",
-    "Orang Minyak",
-    "Penanggal",
-    "Pocong",
-    "Pontianak Tree",
-    "Preta",
-    "Rakshasa",
-    "Toyol"
-]
-
-boss_monster_names = [
-    "Mogui Summoner",
-    "Rafflesia",
-    "Ice Jinn",
-    "Thunder Jinn",
-    "Fire Jinn"
-]
-
-kill_quests = {
-    f"{kill_descriptor[j]} {regular_monster_names[i]}": offset + i * 10+ j for i in range(0, len(regular_monster_names)) for j in range(0, 10)
+monster_prime_location = {
+	'Ahool': 'RRRR',
+    'Babi Ngepet': 'RRRR',
+    'E-Gui': 'RRRR',
+    'Gui-Kia': 'RRRR',
+    'Hantu Raya': 'RRRR',
+    'Hantu Tinggi': 'RRRR',
+    'Jenglot': 'RRRR',
+    'Jiang-Shi': 'RRRR',
+    'Komodo Wizard': 'RRRR',
+    'Salamancer': 'RRRR',
+    'Orang Minyak': 'RRRR',
+    'Penanggal': 'RRRR',
+    'Pocong': 'RRRR',
+    'Pontianak Tree': 'RRRR',
+    'Preta': 'RRRR',
+    'Rakshasa': 'RRRR',
+    'Toyol': 'RRRR'
 }
+
+boss_prime_location = {
+	'Mogui Summoner': 'RRRR',
+    'Rafflesia': 'RRRR',
+    'Ice Jinn': 'RRRR',
+    'Thunder Jinn': 'RRRR',
+    'Fire Jinn': 'RRRR',
+	'Hantu Tinggi': 'RRRR'
+}
+
+
+regular_monster_names = []
+boss_monster_names = []
+
+for m in monster_prime_location.keys():
+	regular_monster_names.append(m)
+
+for b in boss_prime_location.keys():
+	boss_monster_names.append(b)
+
+
+def get_locations_for_monster(monster: str):
+	quests = []
+	for i in range(0, len(kill_descriptor)):
+		quests.append(f"{kill_descriptor[i]} {monster}")
+	return quests
+
+def get_locations_for_region(region: str):
+	quests = []
+	for m in monster_prime_location.keys():
+		if monster_prime_location[m] == region:
+			quests.append(m)
+	for b in boss_prime_location.keys():
+		if boss_prime_location[b] == region:
+			quests.append(b)
+	if region == "Seaport":
+		for s in link_bracelets.keys():
+			quests.append(s)
+	return quests
+
+
+kill_quests = {}
+
+for i in range(0, len(regular_monster_names)):
+	quests = get_locations_for_monster(regular_monster_names[i])
+	for j in range(0, len(quests)):
+		kill_quests[quests[j]] = offset + i * len(kill_descriptor) + j
+
+
+
 
 boss_offset = offset + (len(regular_monster_names)) * 10
 

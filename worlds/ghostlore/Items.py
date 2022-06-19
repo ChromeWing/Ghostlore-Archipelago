@@ -1,5 +1,5 @@
 from BaseClasses import Item
-from Locations import kill_descriptor, regular_monster_names, boss_monster_names
+from .Locations import kill_descriptor, regular_monster_names, boss_monster_names
 import typing
 
 class GhostloreItem(Item):
@@ -44,8 +44,16 @@ shop_item_table = {
 	"Shop 20": shop_offset + 19
 }
 
+quest_item_offset = shop_offset + len(shop_item_table)
+
+quest_item_table = {
+	"Chthonite": quest_item_offset + 0,
+	"Astralite": quest_item_offset + 1
+}
+
 item_table = {
 	**monster_item_table,
 	**boss_item_table,
-	**shop_item_table
+	**shop_item_table,
+	**quest_item_table
 }

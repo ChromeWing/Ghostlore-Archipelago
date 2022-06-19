@@ -1,13 +1,14 @@
 import string
-from BaseClasses import Tutorial
+from BaseClasses import Entrance, Region, RegionType, Tutorial
 
 
-from BaseClasses import Item, MultiWorld, Tutorial
+from BaseClasses import Item, Tutorial
+from worlds.ghostlore.Regions import ghostlore_regions, ghostlore_connections
 from .Items import item_table, GhostloreItem
-from .Locations import location_table, regular_monster_names, boss_monster_names, shop_size, GhostloreLocation
+from .Locations import get_locations_for_region, location_table, regular_monster_names, boss_monster_names, shop_size, GhostloreLocation
 from .Options import ghostlore_options
 from .Rules import set_rules
-from worlds.AutoWorld import WebWorld, World
+from ..AutoWorld import World, WebWorld
 
 
 
@@ -35,14 +36,12 @@ class GhostloreWorld(World):
 	
 	options = ghostlore_options
 	
-	item_name_to_id: item_table
-	location_name_to_id: location_table
+	item_name_to_id = item_table
+	location_name_to_id = location_table
 
-	forced_auto_forfeit: False
+	forced_auto_forfeit = False
 
 	def generate_basic(self):
-		regular_monster_count = len(regular_monster_names)
-		boss_monster_count = len(boss_monster_names)
 		kill_quests = self.world.kill_quests_per_monster[self.player].value
 		itempool = []
 		
@@ -65,8 +64,29 @@ class GhostloreWorld(World):
 		set_rules(self.world, self.player)
 
 	def create_regions(self):
-		# TODO: create the regions of the world
-		pass
+		for(reg, exits) in ghostlore_regions:
+			region = Region(reg, RegionType.Generic, f"Something first found from {reg}",self.player,self.world)
+			for i in get_locations_for_region(reg):
+				region.locations += [GhostloreLocation(self.player, i, location_table[i], region)]
+			for e in exits:
+				region.exits += [Entrance(self.player, e, region)]
+				print(e)
+		for(exit, requirements, region) in ghostlore_connections:
+			connection = self.world.get_entrance(exit, self.player)
+			if requirements != None:
+				connection.access_rule = lambda state: state.has_all(requirements, self.player)
+			connection.connect(self.world.get_region(region,self.player))
+		
+
+	def create_item(self, name: str) -> Item:
+		item_id = item_table[name]
+		item = GhostloreItem(name, self._is_progression(name), item_id, self.player)
+		return item
+
+	
+		
+	def _is_progression(name: str):
+		return False #TODO placeholder
 	
 	def fill_slot_data(self):
 		return {
