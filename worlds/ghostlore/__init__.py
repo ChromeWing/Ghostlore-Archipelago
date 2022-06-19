@@ -53,7 +53,9 @@ class GhostloreWorld(World):
 		for boss in boss_monster_names:
 			itempool += [f"{boss} Boss Loot"]
 
-		self.item_name_groups["Loot"] = itempool
+
+
+		self.item_name_groups["Loot"] = itempool[:]
 
 		# Shop items
 		for i in range(0,shop_size):
@@ -106,12 +108,12 @@ class GhostloreWorld(World):
 			for e in exits:
 				region.exits += [Entrance(self.player, e, region)]
 			self.world.regions.append(region)
-		for(exit, requirements, region) in ghostlore_connections:
-			print(exit+ " "+str(self.player))
+		for(exit, requirements, dest) in ghostlore_connections:
 			connection = self.world.get_entrance(exit, self.player)
-			if requirements != None:
-				connection.access_rule = lambda state: state.has_all(requirements, self.player)
-			connection.connect(self.world.get_region(region,self.player))
+			if requirements:
+				connection.access_rule = lambda state: requirements(self.player,state)
+			connection.connect(self.world.get_region(dest,self.player))
+		print("done creating regions")
 		
 
 	def create_item(self, name: str) -> Item:

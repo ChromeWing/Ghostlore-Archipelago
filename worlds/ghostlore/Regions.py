@@ -19,15 +19,15 @@ ghostlore_regions = [
 
 ghostlore_connections = [
 	('New Adventure', None, 'Starting Zone'),
-	('Rescued Master Ghosthunter', None, 'Seaport'),
+	('Rescued Master Ghosthunter', lambda player,state:state.has_group("Loot",player,2), 'Seaport'),
 	('Sail to Pulau Hijawan', None,'Pulau Hijawan'),
-	('Kill Rafflesia', None, 'Pulau Kubor'),
-	('Kill Hantu Raya', None, 'Kenchanaraya Ruins'),
-	('Collect Chthonite', ["Chthonite"], 'Pulau Pasir Puaka'),
-	('Kill all Jinns', None, 'Pulau Bakau'),
-	('Kill Hantu Tinggi', None, 'Abandoned Old Hospital'),
-	('Rescue little girl', None, 'Batu Sinaran'),
-	('Collect Astralite', ["Chthonite", "Astralite"], 'Endgame')
+	('Kill Rafflesia', lambda player,state:state.has_group("Loot",player,5), 'Pulau Kubor'),
+	('Kill Hantu Raya', lambda player,state:state.has_group("Loot",player,8), 'Kenchanaraya Ruins'),
+	('Collect Chthonite', lambda player,state:state.has_group("Loot",player,10) and state.has("Chthonite", player), 'Pulau Pasir Puaka'),
+	('Kill all Jinns', lambda player,state:state.has_group("Loot",player,14), 'Pulau Bakau'),
+	('Kill Hantu Tinggi', lambda player,state:state.has_group("Loot",player,16), 'Abandoned Old Hospital'),
+	('Rescue little girl', lambda player,state:state.has_group("Loot",player,18), 'Batu Sinaran'),
+	('Collect Astralite', lambda player,state:state.has_group("Loot",player,18) and state.has("Astralite",player), 'Endgame')
 ]
 
 
