@@ -1,3 +1,4 @@
+from functools import partial
 import string
 from BaseClasses import Entrance, Region, RegionType, Tutorial
 
@@ -55,7 +56,7 @@ class GhostloreWorld(World):
 
 
 
-		self.item_name_groups["Loot"] = itempool[:]
+		self.item_name_groups["Loot"] = set(itempool[:])
 
 		# Shop items
 		for i in range(0,shop_size):
@@ -111,7 +112,7 @@ class GhostloreWorld(World):
 		for(exit, requirements, dest) in ghostlore_connections:
 			connection = self.world.get_entrance(exit, self.player)
 			if requirements:
-				connection.access_rule = lambda state: requirements(self.player,state)
+				connection.access_rule = partial((lambda req,state:req(self.player, state)), requirements)
 			connection.connect(self.world.get_region(dest,self.player))
 		print("done creating regions")
 		
@@ -131,12 +132,12 @@ class GhostloreWorld(World):
 	
 	def fill_slot_data(self):
 		return {
-			"goal": self.goal,
-			"monster_workload": self.monster_workload,
-			"kill_quests_per_monster": self.kill_quests_per_monster,
-			"item_level_type": self.item_level_type,
-			"base_item_shop_price": self.base_item_shop_price,
-			"death_link": self.death_link
+			"goal": self.world.goal[self.player].value,
+			"monster_workload": self.world.monster_workload[self.player].value,
+			"kill_quests_per_monster": self.world.kill_quests_per_monster[self.player].value,
+			"item_level_type": self.world.item_level_type[self.player].value,
+			"base_item_shop_price": self.world.base_item_shop_price[self.player].value,
+			"death_link": self.world.death_link[self.player].value
 		}
 		
 
