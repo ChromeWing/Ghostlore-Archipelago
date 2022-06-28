@@ -77,7 +77,7 @@ class GhostloreWorld(World):
 		self.world.get_location("Hell Gate 10", self.player).place_locked_item(self.create_goal_event("Hell Gate 10 cleared"))
 
 		if self.goal == 0:
-			
+			self.world.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
 			pass
 		elif self.goal == 1:
 			self.world.completion_condition[self.player] = lambda state: state.has("Hell Gate 1 cleared", self.player)
@@ -86,7 +86,7 @@ class GhostloreWorld(World):
 		elif self.goal == 3:
 			self.world.completion_condition[self.player] = lambda state: state.has("Hell Gate 10 cleared", self.player)
 
-		self.world.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
+		
 
 
 
