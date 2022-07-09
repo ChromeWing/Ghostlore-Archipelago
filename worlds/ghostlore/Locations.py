@@ -27,10 +27,8 @@ kill_descriptor = [
 monster_prime_location = {
 	'Ahool': 'Kenchanaraya Ruins',
     'Babi Ngepet': 'Pulau Hijawan',
-	'Cicak Sorceress': 'Pulau Bakau',
     'E-Gui': 'Starting Zone',
     'Gui-Kia': 'Starting Zone',
-    'Hantu Raya': 'Pulau Hijawan',
     'Jenglot': 'Pulau Hijawan',
     'Jiang-Shi': 'Starting Zone',
     'Komodo Wizard': 'Kenchanaraya Ruins',
@@ -88,6 +86,10 @@ def get_locations_for_region(region: str, kill_quest_count):
 	if region == "Seaport":
 		for s in link_bracelets.keys():
 			quests.append(s)
+	if region == "Kenchanaraya Ruins":
+		quests.append("Chthonite Chest")
+	if region == "Batu Sinaran":
+		quests.append("Astralite Chest")
 	if region == "Endgame":
 		for v in goal_locations:
 			quests.append(v)
@@ -139,3 +141,5 @@ location_table = {
 	**itemquest_locations,
 	**goal_locations
 }
+
+print(location_table)
