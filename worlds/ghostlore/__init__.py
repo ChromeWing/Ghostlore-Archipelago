@@ -1,6 +1,6 @@
 from functools import partial
 import string
-from BaseClasses import Entrance, Region, RegionType, Tutorial
+from BaseClasses import Entrance, ItemClassification, Region, RegionType, Tutorial
 
 
 from BaseClasses import Item, Tutorial
@@ -126,7 +126,9 @@ class GhostloreWorld(World):
 
 	def create_item(self, name: str) -> Item:
 		item_id = item_table[name]
-		item = GhostloreItem(name, self._is_progression(name), item_id, self.player)
+		item = GhostloreItem(name, ItemClassification.filler, item_id, self.player)
+		if self._is_progression(name):
+			item.classification = ItemClassification.progression
 		return item
 
 	def create_goal_event(self, name: str) -> Item:
