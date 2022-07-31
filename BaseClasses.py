@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import copy
-from enum import Enum, unique
+from enum import unique, IntEnum, IntFlag
 import logging
 import json
 import functools
@@ -126,7 +126,6 @@ class MultiWorld():
             set_player_attr('beemizer_total_chance', 0)
             set_player_attr('beemizer_trap_chance', 0)
             set_player_attr('escape_assist', [])
-            set_player_attr('open_pyramid', False)
             set_player_attr('treasure_hunt_icon', 'Triforce Piece')
             set_player_attr('treasure_hunt_count', 0)
             set_player_attr('clock_mode', False)
@@ -390,20 +389,14 @@ class MultiWorld():
         self.state.collect(item, True)
 
     def push_item(self, location: Location, item: Item, collect: bool = True):
-        if not isinstance(location, Location):
-            raise RuntimeError(
-                'Cannot assign item %s to invalid location %s (player %d).' % (item, location, item.player))
+        assert location.can_fill(self.state, item, False), f"Cannot place {item} into {location}."
+        location.item = item
+        item.location = location
+        item.world = self  # try to not have this here anymore and create it with item?
+        if collect:
+            self.state.collect(item, location.event, location)
 
-        if location.can_fill(self.state, item, False):
-            location.item = item
-            item.location = location
-            item.world = self  # try to not have this here anymore
-            if collect:
-                self.state.collect(item, location.event, location)
-
-            logging.debug('Placed %s at %s', item, location)
-        else:
-            raise RuntimeError('Cannot assign item %s to location %s.' % (item, location))
+        logging.debug('Placed %s at %s', item, location)
 
     def get_entrances(self) -> List[Entrance]:
         if self._cached_entrances is None:
@@ -790,7 +783,7 @@ class CollectionState():
                 or (self.has('Bombs (10)', player) and enemies < 6))
 
     def can_shoot_arrows(self, player: int) -> bool:
-        if self.world.retro[player]:
+        if self.world.retro_bow[player]:
             return (self.has('Bow', player) or self.has('Silver Bow', player)) and self.can_buy('Single Arrow', player)
         return self.has('Bow', player) or self.has('Silver Bow', player)
 
@@ -911,7 +904,7 @@ class CollectionState():
 
 
 @unique
-class RegionType(int, Enum):
+class RegionType(IntEnum):
     Generic = 0
     LightWorld = 1
     DarkWorld = 2
@@ -1066,7 +1059,7 @@ class Boss():
         return f"Boss({self.name})"
 
 
-class LocationProgressType(Enum):
+class LocationProgressType(IntEnum):
     DEFAULT = 1
     PRIORITY = 2
     EXCLUDED = 3
@@ -1138,19 +1131,29 @@ class Location:
         return "at " + self.name.replace("_", " ").replace("-", " ")
 
 
-class Item():
+class ItemClassification(IntFlag):
+    filler = 0b0000  # aka trash, as in filler items like ammo, currency etc,
+    progression = 0b0001  # Item that is logically relevant
+    useful = 0b0010  # Item that is generally quite useful, but not required for anything logical
+    trap = 0b0100  # detrimental or entirely useless (nothing) item
+    skip_balancing = 0b1000  # should technically never occur on its own
+    # Item that is logically relevant, but progression balancing should not touch.
+    # Typically currency or other counted items.
+    progression_skip_balancing = 0b1001  # only progression gets balanced
+
+    def as_flag(self) -> int:
+        """As Network API flag int."""
+        return int(self & 0b0111)
+
+
+class Item:
     location: Optional[Location] = None
     world: Optional[MultiWorld] = None
     code: Optional[int] = None  # an item with ID None is called an Event, and does not get written to multidata
     name: str
     game: str = "Generic"
     type: str = None
-    # indicates if this is a negative impact item. Causes these to be handled differently by various games.
-    trap: bool = False
-    # change manually to ensure that a specific non-progression item never goes on an excluded location
-    never_exclude = False
-    # item is not considered by progression balancing despite being progression
-    skip_in_prog_balancing: bool = False
+    classification: ItemClassification
 
     # need to find a decent place for these to live and to allow other games to register texts if they want.
     pedestal_credit_text: str = "and the Unknown Item"
@@ -1165,9 +1168,9 @@ class Item():
     map: bool = False
     compass: bool = False
 
-    def __init__(self, name: str, advancement: bool, code: Optional[int], player: int):
+    def __init__(self, name: str, classification: ItemClassification, code: Optional[int], player: int):
         self.name = name
-        self.advancement = advancement
+        self.classification = classification
         self.player = player
         self.code = code
 
@@ -1180,8 +1183,24 @@ class Item():
         return getattr(self, "_pedestal_hint_text", self.name.replace("_", " ").replace("-", " "))
 
     @property
+    def advancement(self) -> bool:
+        return ItemClassification.progression in self.classification
+
+    @property
+    def skip_in_prog_balancing(self) -> bool:
+        return ItemClassification.progression_skip_balancing in self.classification
+
+    @property
+    def useful(self) -> bool:
+        return ItemClassification.useful in self.classification
+
+    @property
+    def trap(self) -> bool:
+        return ItemClassification.trap in self.classification
+
+    @property
     def flags(self) -> int:
-        return self.advancement + (self.never_exclude << 1) + (self.trap << 2)
+        return self.classification.as_flag()
 
     def __eq__(self, other):
         return self.name == other.name and self.player == other.player
@@ -1405,8 +1424,6 @@ class Spoiler():
                     outfile.write('Entrance Shuffle:                %s\n' % self.world.shuffle[player])
                     if self.world.shuffle[player] != "vanilla":
                         outfile.write('Entrance Shuffle Seed            %s\n' % self.world.worlds[player].er_seed)
-                    outfile.write('Pyramid hole pre-opened:         %s\n' % (
-                        'Yes' if self.world.open_pyramid[player] else 'No'))
                     outfile.write('Shop inventory shuffle:          %s\n' %
                                   bool_to_text("i" in self.world.shop_shuffle[player]))
                     outfile.write('Shop price shuffle:              %s\n' %
@@ -1490,7 +1507,7 @@ class Tutorial(NamedTuple):
     language: str
     file_name: str
     link: str
-    author: List[str]
+    authors: List[str]
 
 
 seeddigits = 20

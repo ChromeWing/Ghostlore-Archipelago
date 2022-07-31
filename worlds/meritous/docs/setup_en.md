@@ -52,13 +52,19 @@ Once the goal has been completed, you may press F to send a forfeit, sending out
 
 More in-depth information about the game can be found in the game's help file, accessed by pressing H while playing.
 
+## Commands
+While playing the multiworld you can interact with the server using various commands listed in the 
+[commands guide](/tutorial/Archipelago/commands/en). As this game does not have an in-game text client at the moment,
+You can optionally connect to the multiworld using the text client, which can be found in the 
+[main Archipelago installation](https://github.com/ArchipelagoMW/Archipelago/releases) as Archipelago Text Client to
+enter these commands.
+
 ## Game Troubleshooting
 
 ### An error message shows up at the bottom-left
 
 - `Disconnected`: If the game does not reconnect automatically, you may need to save, quit, and reload the game to reconnect. Keep in mind that the game does not auto-save, and it is only possible to save the game at Save Tiles.
 - `InvalidSlot`, `InvalidGame`: Make sure the `slotname` in `meritous-ap.json` matches the name provided in your Meritous YAML file.
-- `SlotAlreadyTaken`: Make sure Meritous Gaiden is not already running and connected to the server.
 - `IncompatibleVersion`: Make sure Meritous Gaiden has been updated to the latest version.
 - `InvalidPassword`: Make sure the `password` in `meritous-ap.json` matches the password for your game. If there is no password, either set this to `null` (no quotes) or omit/remove it completely.
 - `InvalidItemsHandling`: This is a bug and shouldn't happen if you downloaded a precompiled copy of the game. If you downloaded a precompiled copy, please let KewlioMZX know over GitHub or the AP Discord.
