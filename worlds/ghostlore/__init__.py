@@ -6,7 +6,7 @@ from BaseClasses import Entrance, Region, RegionType, Tutorial
 from BaseClasses import Item, Tutorial
 from worlds.ghostlore.Regions import ghostlore_regions, ghostlore_connections
 from .Items import item_table, GhostloreItem
-from .Locations import get_locations_for_region, location_table, regular_monster_names, boss_monster_names, shop_size, GhostloreLocation
+from .Locations import get_locations_for_region, location_table, regular_monster_names, boss_monster_names, shop_size, chest_count, GhostloreLocation
 from .Options import Goal, ghostlore_options
 from .Rules import set_rules
 from ..AutoWorld import World, WebWorld
@@ -68,6 +68,10 @@ class GhostloreWorld(World):
 		for i in ["Chthonite", "Astralite"]:
 			itempool += [i]
 
+		for i in range(0, chest_count):
+			itempool += ["1000 Coins"]
+
+
 		itempool = list(map(lambda name: self.create_item(name), itempool))
 
 		print(itempool)
@@ -101,6 +105,7 @@ class GhostloreWorld(World):
 		self.kill_quests_per_monster = self.world.kill_quests_per_monster[self.player].value
 		self.item_level_type = self.world.item_level_type[self.player].value
 		self.base_item_shop_price = self.world.base_item_shop_price[self.player].value
+		self.experience_rate = self.world.experience_rate[self.player].value
 		self.death_link = self.world.death_link[self.player].value
 
 	def create_regions(self):
@@ -139,6 +144,7 @@ class GhostloreWorld(World):
 			"kill_quests_per_monster": self.world.kill_quests_per_monster[self.player].value,
 			"item_level_type": self.world.item_level_type[self.player].value,
 			"base_item_shop_price": self.world.base_item_shop_price[self.player].value,
+			"experience_rate": self.world.experience_rate[self.player].value,
 			"death_link": self.world.death_link[self.player].value
 		}
 		

@@ -14,6 +14,7 @@ ghostlore_regions = [
 	('Pulau Bakau', ['Kill Hantu Tinggi']),
 	('Abandoned Old Hospital', ['Rescue little girl']),
 	('Batu Sinaran', ['Collect Astralite']),
+	('Seaport Underground', ['Clear Enemy Waves']),
 	('Endgame',[]),
 ]
 
@@ -27,7 +28,8 @@ ghostlore_connections = [
 	('Kill all Jinns', lambda player,state:state.has_group("Loot",player,17), 'Pulau Bakau'),
 	('Kill Hantu Tinggi', lambda player,state:state.has_group("Loot",player,21), 'Abandoned Old Hospital'),
 	('Rescue little girl', lambda player,state:state.has_group("Loot",player,28), 'Batu Sinaran'),
-	('Collect Astralite', lambda player,state:state.has_group("Loot",player,36) and state.has("Astralite",player), 'Endgame')
+	('Collect Astralite', lambda player,state:state.has_group("Loot",player,36) and state.has("Astralite",player), 'Seaport Underground'),
+	('Clear Enemy Waves', lambda player,state:state.has_group("Loot",player,40), 'Endgame')
 ]
 
 

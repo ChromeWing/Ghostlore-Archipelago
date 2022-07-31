@@ -44,11 +44,19 @@ class BaseItemShopPrice(Range):
 	range_end = 3000
 	default = 500
 
+class ExperienceRate(Range):
+	"""The percentage multiplier for the game's experience points gained by the player."""
+	display_name = "Experience Rate % Multiplier"
+	range_start = 100
+	range_end = 300
+	default = 100
+
 ghostlore_options: typing.Dict[str, type(Option)] = {
 	"goal": Goal,
 	"monster_workload": MonsterWorkload,
 	"kill_quests_per_monster": KillQuestsPerMonster,
 	"item_level_type": ItemLevelType,
 	"base_item_shop_price": BaseItemShopPrice,
+	"experience_rate": ExperienceRate,
 	"death_link": DeathLink
 }

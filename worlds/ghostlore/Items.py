@@ -53,9 +53,16 @@ quest_item_table = {
 	"Astralite": quest_item_offset + 1
 }
 
+coin_offset = quest_item_offset + len(quest_item_table)
+
+coin_item = {
+	"1000 Coins": coin_offset
+}
+
 item_table = {
 	**monster_item_table,
 	**boss_item_table,
 	**shop_item_table,
-	**quest_item_table
+	**quest_item_table,
+	**coin_item
 }
