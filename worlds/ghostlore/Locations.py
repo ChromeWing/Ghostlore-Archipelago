@@ -41,7 +41,7 @@ monster_prime_location = {
     'Pontianak Tree': 'Pulau Kubor',
     'Preta': 'Kenchanaraya Ruins',
     'Rakshasa': 'Kenchanaraya Ruins',
-    'Salamancer': 'Pulau Hijawan',
+    'Salamancer': 'Pulau Bakau',
     'Toyol': 'Pulau Pasir Puaka',
 	'Stone Guardian': 'Kenchanaraya Ruins',
 	'Ectoplasm': 'Abandoned Old Hospital',
@@ -59,15 +59,15 @@ monster_prime_location = {
 
 }
 
-#TODO: re-add Ice Jinn, Thunder Jinn and Hantu Tinggi once they get fixed in the game.
+#TODO: re-add Hantu Tinggi once they get fixed in the game.
 boss_prime_location = {
 	'Mogui Summoner': 'Starting Zone',
     'Rafflesia': 'Pulau Hijawan',
 	'Hantu Raya': 'Pulau Kubor',
-#   'Ice Jinn': 'Pulau Pasir Puaka',
-#   'Thunder Jinn': 'Pulau Pasir Puaka',
-   'Fire Jinn': 'Pulau Pasir Puaka',
-#	'Hantu Tinggi': 'Pulau Bakau'
+	'Ice Jinn': 'Pulau Pasir Puaka',
+	'Thunder Jinn': 'Pulau Pasir Puaka',
+	'Fire Jinn': 'Pulau Pasir Puaka',
+	'Hantu Tinggi': 'Pulau Bakau'
 }
 
 chest_region_split = { #add up to chest_count
