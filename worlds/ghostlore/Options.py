@@ -1,5 +1,5 @@
 import typing
-from Options import DeathLink, Option, DefaultOnToggle, Range, Choice
+from Options import DeathLink, Option, DefaultOnToggle, Range, Choice, Toggle
 
 
 class Goal(Choice):
@@ -51,6 +51,14 @@ class ExperienceRate(Range):
 	range_end = 300
 	default = 100
 
+class RandomizeSounds(Toggle):
+	"""When enabled, shuffles the sound effects in the game."""
+	display_name = "Randomize Sounds"
+
+class RandomizeMusic(Toggle):
+	"""When enabled, shuffles the music for the different areas of the game."""
+	display_name = "Randomize Music"
+
 ghostlore_options: typing.Dict[str, type(Option)] = {
 	"goal": Goal,
 	"monster_workload": MonsterWorkload,
@@ -58,5 +66,7 @@ ghostlore_options: typing.Dict[str, type(Option)] = {
 	"item_level_type": ItemLevelType,
 	"base_item_shop_price": BaseItemShopPrice,
 	"experience_rate": ExperienceRate,
+	"randomize_sounds": RandomizeSounds,
+	"randomize_music": RandomizeMusic,
 	"death_link": DeathLink
 }

@@ -106,6 +106,8 @@ class GhostloreWorld(World):
 		self.item_level_type = self.world.item_level_type[self.player].value
 		self.base_item_shop_price = self.world.base_item_shop_price[self.player].value
 		self.experience_rate = self.world.experience_rate[self.player].value
+		self.randomize_sounds = self.world.randomize_sounds[self.player].value
+		self.randomize_music = self.world.randomize_music[self.player].value
 		self.death_link = self.world.death_link[self.player].value
 
 	def create_regions(self):
@@ -132,7 +134,7 @@ class GhostloreWorld(World):
 		return item
 
 	def create_goal_event(self, name: str) -> Item:
-		event = GhostloreItem(name, True, None, self.player)
+		event = GhostloreItem(name, ItemClassification.progression, None, self.player)
 		event.type = "Victory"
 		return event
 		
@@ -147,6 +149,8 @@ class GhostloreWorld(World):
 			"item_level_type": self.world.item_level_type[self.player].value,
 			"base_item_shop_price": self.world.base_item_shop_price[self.player].value,
 			"experience_rate": self.world.experience_rate[self.player].value,
+			"randomize_sounds": self.world.randomize_sounds[self.player].value,
+			"randomize_music": self.world.randomize_music[self.player].value,
 			"death_link": self.world.death_link[self.player].value
 		}
 		
