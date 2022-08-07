@@ -122,11 +122,13 @@ flowchart LR
             SN[Subnautica]
             HK[Hollow Knight]
             R[Raft]
+            GL[Ghostlore]
         end
         NM <-- BepInEx --> ROR
         NM <-- "QModLoader (BepInEx)" --> SN
         NM <-- HK Modding API --> HK
         NM <--> R
+        NM <--> GL
     end
     AS <-- WebSockets --> NM
 

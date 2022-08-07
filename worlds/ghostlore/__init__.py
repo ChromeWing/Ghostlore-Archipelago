@@ -74,7 +74,6 @@ class GhostloreWorld(World):
 
 		itempool = list(map(lambda name: self.create_item(name), itempool))
 
-		print(itempool)
 		self.world.itempool += itempool
 
 		self.world.get_location("End of story", self.player).place_locked_item(self.create_goal_event("Victory"))
@@ -123,7 +122,7 @@ class GhostloreWorld(World):
 			if requirements:
 				connection.access_rule = partial((lambda req,state:req(self.player, state)), requirements)
 			connection.connect(self.world.get_region(dest,self.player))
-		print("done creating regions")
+		
 		
 
 	def create_item(self, name: str) -> Item:

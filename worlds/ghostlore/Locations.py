@@ -179,4 +179,3 @@ location_table = {
 	**goal_locations
 }
 
-print(location_table)
