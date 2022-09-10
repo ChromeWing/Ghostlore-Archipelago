@@ -15,6 +15,7 @@ ghostlore_regions = [
 	('Abandoned Old Hospital', ['Rescue little girl']),
 	('Batu Sinaran', ['Collect Astralite']),
 	('Seaport Underground', ['Clear Enemy Waves']),
+	('The Spirit World', ['Defeat Zenith']),
 	('Endgame',[]),
 ]
 
@@ -29,7 +30,8 @@ ghostlore_connections = [
 	('Kill Hantu Tinggi', lambda player,state:state.has_group("Loot",player,21), 'Abandoned Old Hospital'),
 	('Rescue little girl', lambda player,state:state.has_group("Loot",player,28), 'Batu Sinaran'),
 	('Collect Astralite', lambda player,state:state.has_group("Loot",player,36) and state.has("Astralite",player), 'Seaport Underground'),
-	('Clear Enemy Waves', lambda player,state:state.has_group("Loot",player,40), 'Endgame')
+	('Clear Enemy Waves', lambda player,state:state.has_group("Loot",player,40), 'The Spirit World'),
+	('Defeat Zenith', lambda player,state:state.has_group("Loot",player,45), 'Endgame')
 ]
 
 

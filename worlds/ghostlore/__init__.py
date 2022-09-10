@@ -35,7 +35,7 @@ class GhostloreWorld(World):
 	
 	web = GhostloreWeb()
 	
-	options = ghostlore_options
+	option_definitions = ghostlore_options
 	
 	item_name_to_id = item_table
 	location_name_to_id = location_table
