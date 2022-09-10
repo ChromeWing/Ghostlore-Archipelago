@@ -48,7 +48,7 @@ class ExperienceRate(Range):
 	"""The percentage multiplier for the game's experience points gained by the player."""
 	display_name = "Experience Rate % Multiplier"
 	range_start = 100
-	range_end = 300
+	range_end = 500
 	default = 100
 
 class RandomizeSounds(Toggle):
