@@ -68,8 +68,7 @@ boss_prime_location = {
 	'Ice Jinn': 'Pulau Pasir Puaka',
 	'Thunder Jinn': 'Pulau Pasir Puaka',
 	'Fire Jinn': 'Pulau Pasir Puaka',
-	'Hantu Tinggi': 'Pulau Bakau',
-	'Zenith': 'The Spirit World'
+	'Hantu Tinggi': 'Pulau Bakau'
 }
 
 chest_region_split = { #add up to chest_count
