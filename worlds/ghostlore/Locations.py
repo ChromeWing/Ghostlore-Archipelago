@@ -44,7 +44,6 @@ monster_prime_location = {
     'Salamancer': 'Pulau Bakau',
     'Toyol': 'Pulau Pasir Puaka',
 	'Stone Guardian': 'Kenchanaraya Ruins',
-	'Spell Tower': 'Kenchanaraya Ruins',
 	'Ectoplasm': 'Abandoned Old Hospital',
 	'Burning Ectoplasm': 'Abandoned Old Hospital',
 	'Chilling Ectoplasm': 'Abandoned Old Hospital',
@@ -56,8 +55,7 @@ monster_prime_location = {
 	'Infernal Spirit Orb': 'Abandoned Old Hospital',
 	'Nu-Gui': 'Abandoned Old Hospital',
 	'Aphotic Lurker': 'Seaport Underground',
-	'Croc Lord': 'Seaport Underground',
-	'Aphotic Lurker Hell': 'The Spirit World'
+	'Croc Lord': 'Seaport Underground'
 }
 
 #TODO: re-add Hantu Tinggi once they get fixed in the game.
