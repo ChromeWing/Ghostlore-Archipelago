@@ -45,7 +45,7 @@ class GhostloreWorld(World):
 	forced_auto_forfeit = False
 
 	def generate_basic(self):
-		kill_quests = self.world.kill_quests_per_monster[self.player].value
+		kill_quests = self.multiworld.kill_quests_per_monster[self.player].value
 		itempool = []
 		
 		# Monster loot
@@ -74,55 +74,56 @@ class GhostloreWorld(World):
 
 		itempool = list(map(lambda name: self.create_item(name), itempool))
 
-		self.world.itempool += itempool
+		print(itempool)
+		self.multiworld.itempool += itempool
 
-		self.world.get_location("End of story", self.player).place_locked_item(self.create_goal_event("Victory"))
-		self.world.get_location("Hell Gate 1", self.player).place_locked_item(self.create_goal_event("Hell Gate 1 cleared"))
-		self.world.get_location("Hell Gate 3", self.player).place_locked_item(self.create_goal_event("Hell Gate 3 cleared"))
-		self.world.get_location("Hell Gate 10", self.player).place_locked_item(self.create_goal_event("Hell Gate 10 cleared"))
+		self.multiworld.get_location("End of story", self.player).place_locked_item(self.create_goal_event("Victory"))
+		self.multiworld.get_location("Hell Gate 1", self.player).place_locked_item(self.create_goal_event("Hell Gate 1 cleared"))
+		self.multiworld.get_location("Hell Gate 3", self.player).place_locked_item(self.create_goal_event("Hell Gate 3 cleared"))
+		self.multiworld.get_location("Hell Gate 10", self.player).place_locked_item(self.create_goal_event("Hell Gate 10 cleared"))
 
 		if self.goal == 0:
-			self.world.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
+			self.multiworld.completion_condition[self.player] = lambda state: state.has("Victory", self.player)
 			pass
 		elif self.goal == 1:
-			self.world.completion_condition[self.player] = lambda state: state.has("Hell Gate 1 cleared", self.player)
+			self.multiworld.completion_condition[self.player] = lambda state: state.has("Hell Gate 1 cleared", self.player)
 		elif self.goal == 2:
-			self.world.completion_condition[self.player] = lambda state: state.has("Hell Gate 3 cleared", self.player)
+			self.multiworld.completion_condition[self.player] = lambda state: state.has("Hell Gate 3 cleared", self.player)
 		elif self.goal == 3:
-			self.world.completion_condition[self.player] = lambda state: state.has("Hell Gate 10 cleared", self.player)
+			self.multiworld.completion_condition[self.player] = lambda state: state.has("Hell Gate 10 cleared", self.player)
 
 		
 
 
 
 	def set_rules(self):
-		set_rules(self.world, self.player)
+		set_rules(self.multiworld, self.player)
 
 	def generate_early(self):
-		self.goal = self.world.goal[self.player].value
-		self.monster_workload = self.world.monster_workload[self.player].value
-		self.kill_quests_per_monster = self.world.kill_quests_per_monster[self.player].value
-		self.item_level_type = self.world.item_level_type[self.player].value
-		self.base_item_shop_price = self.world.base_item_shop_price[self.player].value
-		self.experience_rate = self.world.experience_rate[self.player].value
-		self.randomize_sounds = self.world.randomize_sounds[self.player].value
-		self.randomize_music = self.world.randomize_music[self.player].value
-		self.death_link = self.world.death_link[self.player].value
+		self.goal = self.multiworld.goal[self.player].value
+		self.monster_workload = self.multiworld.monster_workload[self.player].value
+		self.kill_quests_per_monster = self.multiworld.kill_quests_per_monster[self.player].value
+		self.item_level_type = self.multiworld.item_level_type[self.player].value
+		self.base_item_shop_price = self.multiworld.base_item_shop_price[self.player].value
+		self.experience_rate = self.multiworld.experience_rate[self.player].value
+		self.randomize_sounds = self.multiworld.randomize_sounds[self.player].value
+		self.randomize_music = self.multiworld.randomize_music[self.player].value
+		self.death_link = self.multiworld.death_link[self.player].value
 
 	def create_regions(self):
 		for(reg, exits) in ghostlore_regions:
-			region = Region(reg, RegionType.Generic, f"Something first found from {reg}",self.player,self.world)
+			region = Region(reg, RegionType.Generic, f"Something first found from {reg}",self.player,self.multiworld)
 			for i in get_locations_for_region(reg,self.kill_quests_per_monster):
 				region.locations += [GhostloreLocation(self.player, i, location_table[i], region)]
 			for e in exits:
 				region.exits += [Entrance(self.player, e, region)]
-			self.world.regions.append(region)
+			self.multiworld.regions.append(region)
 		for(exit, requirements, dest) in ghostlore_connections:
-			connection = self.world.get_entrance(exit, self.player)
+			connection = self.multiworld.get_entrance(exit, self.player)
 			if requirements:
 				connection.access_rule = partial((lambda req,state:req(self.player, state)), requirements)
-			connection.connect(self.world.get_region(dest,self.player))
-		
+			connection.connect(self.multiworld.get_region(dest,self.player))
+		print("done creating regions")
 		
 
 	def create_item(self, name: str) -> Item:
@@ -142,15 +143,15 @@ class GhostloreWorld(World):
 	
 	def fill_slot_data(self):
 		return {
-			"goal": self.world.goal[self.player].value,
-			"monster_workload": self.world.monster_workload[self.player].value,
-			"kill_quests_per_monster": self.world.kill_quests_per_monster[self.player].value,
-			"item_level_type": self.world.item_level_type[self.player].value,
-			"base_item_shop_price": self.world.base_item_shop_price[self.player].value,
-			"experience_rate": self.world.experience_rate[self.player].value,
-			"randomize_sounds": self.world.randomize_sounds[self.player].value,
-			"randomize_music": self.world.randomize_music[self.player].value,
-			"death_link": self.world.death_link[self.player].value
+			"goal": self.multiworld.goal[self.player].value,
+			"monster_workload": self.multiworld.monster_workload[self.player].value,
+			"kill_quests_per_monster": self.multiworld.kill_quests_per_monster[self.player].value,
+			"item_level_type": self.multiworld.item_level_type[self.player].value,
+			"base_item_shop_price": self.multiworld.base_item_shop_price[self.player].value,
+			"experience_rate": self.multiworld.experience_rate[self.player].value,
+			"randomize_sounds": self.multiworld.randomize_sounds[self.player].value,
+			"randomize_music": self.multiworld.randomize_music[self.player].value,
+			"death_link": self.multiworld.death_link[self.player].value
 		}
 		
 
