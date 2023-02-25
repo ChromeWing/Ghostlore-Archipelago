@@ -109,10 +109,10 @@ def call_stage(multiworld: "MultiWorld", method_name: str, *args: Any) -> None:
 
 class WebWorld:
     """Webhost integration"""
-    
+
     settings_page: Union[bool, str] = True
     """display a settings page. Can be a link to a specific page or external tool."""
-    
+
     game_info_languages: List[str] = ['en']
     """docs folder will be scanned for game info pages using this list in the format '{language}_{game_name}.md'"""
 
@@ -160,22 +160,6 @@ class World(metaclass=AutoWorldRegister):
 
     hint_blacklist: ClassVar[FrozenSet[str]] = frozenset()  # any names that should not be hintable
 
-    # NOTE: remote_items and remote_start_inventory are now available in the network protocol for the client to set.
-    # These values will be removed.
-    # if a world is set to remote_items, then it just needs to send location checks to the server and the server
-    # sends back the items
-    # if a world is set to remote_items = False, then the server never sends an item where receiver == finder,
-    # the client finds its own items in its own world.
-    remote_items: bool = True
-
-    # If remote_start_inventory is true, the start_inventory/world.precollected_items is sent on connection,
-    # otherwise the world implementation is in charge of writing the items to their output data.
-    remote_start_inventory: bool = True
-
-    # For games where after a victory it is impossible to go back in and get additional/remaining Locations checked.
-    # this forces forfeit:  auto for those games.
-    forced_auto_forfeit: bool = False
-
     # Hide World Type from various views. Does not remove functionality.
     hidden: ClassVar[bool] = False
 
@@ -204,10 +188,11 @@ class World(metaclass=AutoWorldRegister):
     # can also be implemented as a classmethod and called "stage_<original_name>",
     # in that case the MultiWorld object is passed as an argument and it gets called once for the entire multiworld.
     # An example of this can be found in alttp as stage_pre_fill
+
     @classmethod
-    def assert_generate(cls) -> None:
+    def stage_assert_generate(cls, multiworld: "MultiWorld") -> None:
         """Checks that a game is capable of generating, usually checks for some base file like a ROM.
-        Not run for unittests since they don't produce output"""
+        This gets called once per present world type. Not run for unittests since they don't produce output"""
         pass
 
     def generate_early(self) -> None:
@@ -229,14 +214,12 @@ class World(metaclass=AutoWorldRegister):
         """Optional method that is supposed to be used for special fill stages. This is run *after* plando."""
         pass
 
-    @classmethod
-    def fill_hook(cls,
+    def fill_hook(self,
                   progitempool: List["Item"],
                   usefulitempool: List["Item"],
                   filleritempool: List["Item"],
                   fill_locations: List["Location"]) -> None:
-        """Special method that gets called as part of distribute_items_restrictive (main fill).
-        This gets called once per present world type."""
+        """Special method that gets called as part of distribute_items_restrictive (main fill)."""
         pass
 
     def post_fill(self) -> None:
@@ -245,13 +228,16 @@ class World(metaclass=AutoWorldRegister):
 
     def generate_output(self, output_directory: str) -> None:
         """This method gets called from a threadpool, do not use world.random here.
-        If you need any last-second randomization, use MultiWorld.slot_seeds[slot] instead."""
+        If you need any last-second randomization, use MultiWorld.per_slot_randoms[slot] instead."""
         pass
 
     def fill_slot_data(self) -> Dict[str, Any]:  # json of WebHostLib.models.Slot
         """Fill in the `slot_data` field in the `Connected` network package.
         This is a way the generator can give custom data to the client.
-        The client will receive this as JSON in the `Connected` response."""
+        The client will receive this as JSON in the `Connected` response.
+
+        The generation does not wait for `generate_output` to complete before calling this.
+        `threading.Event` can be used if you need to wait for something from `generate_output`."""
         return {}
 
     def extend_hint_information(self, hint_data: Dict[int, Dict[int, str]]):
