@@ -1,5 +1,5 @@
 
-from BaseClasses import Region, RegionType
+from BaseClasses import Region
 from worlds.ghostlore.Locations import GhostloreLocation, get_locations_for_region
 
 

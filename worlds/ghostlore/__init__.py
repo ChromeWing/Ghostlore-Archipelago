@@ -1,6 +1,6 @@
 from functools import partial
 import string
-from BaseClasses import Entrance, ItemClassification, Region, RegionType, Tutorial
+from BaseClasses import Entrance, ItemClassification, Region, Tutorial
 
 
 from BaseClasses import Item, Tutorial
@@ -111,7 +111,7 @@ class GhostloreWorld(World):
 
 	def create_regions(self):
 		for(reg, exits) in ghostlore_regions:
-			region = Region(reg, RegionType.Generic, f"Something first found from {reg}",self.player,self.multiworld)
+			region = Region(reg,self.player,self.multiworld)
 			for i in get_locations_for_region(reg,self.kill_quests_per_monster):
 				region.locations += [GhostloreLocation(self.player, i, location_table[i], region)]
 			for e in exits:
